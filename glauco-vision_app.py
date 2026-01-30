@@ -1,19 +1,12 @@
-# Thay thế dòng model cũ bằng 3 dòng này:
-from google.generativeai.types import RequestOptions
+import streamlit as st
+import google.generativeai as genai
+from PIL import Image
 
-# Cấu hình sử dụng phiên bản API v1 thay vì v1beta để tránh lỗi 404
-model = genai.GenerativeModel(model_name="gemini-1.5-flash")
-options = RequestOptions(api_version="v1")
-
-# Và sửa dòng gọi kết quả (khoảng dòng 35-40) thành:
-response = model.generate_content([prompt, image], request_options=options)
-
-# Cấu hình trang web
+# 1. Cấu hình trang web trước
 st.set_page_config(page_title="GlaucoVision AI", layout="centered")
 st.title("👁️ GlaucoVision VF Analyzer")
-st.write("Tải lên ảnh báo cáo Humphrey để phân tích.")
 
-# Lấy API Key từ Secrets
+# 2. Kiểm tra API Key từ Secrets
 if "GEMINI_API_KEY" in st.secrets:
     api_key = st.secrets["GEMINI_API_KEY"]
 else:
@@ -21,10 +14,12 @@ else:
 
 if api_key:
     try:
+        # PHẢI CẤU HÌNH TRƯỚC KHI KHAI BÁO MODEL
         genai.configure(api_key=api_key)
-        # Sử dụng model ổn định nhất
-        model = genai.GenerativeModel(model_name="gemini-1.5-flash-latest")
-
+        
+        # Khai báo model với cấu hình v1 để tránh lỗi 404
+        model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+        
         uploaded_file = st.file_uploader("Chọn hình ảnh báo cáo...", type=["jpg", "jpeg", "png"])
 
         if uploaded_file is not None:
@@ -34,19 +29,17 @@ if api_key:
             if st.button("Phân tích báo cáo"):
                 with st.spinner('Đang phân tích dữ liệu...'):
                     try:
-                        prompt = """
-                        Bạn là một chuyên gia nhãn khoa. Hãy phân tích ảnh báo cáo Humphrey Field Analyzer này.
-                        1. Trích xuất các chỉ số MD, PSD, VFI.
-                        2. Nhận diện các tổn thương thị trường (nếu có).
-                        3. Đưa ra nhận xét khách quan. 
-                        Lưu ý: Kết quả này chỉ mang tính tham khảo, không thay thế chẩn đoán y khoa.
-                        """
-                        response = model.generate_content([prompt, image])
+                        prompt = "Bạn là chuyên gia nhãn khoa. Phân tích chỉ số MD, PSD, VFI và tổn thương từ ảnh Humphrey này."
+                        # Thêm request_options để ép sử dụng API bản ổn định
+                        response = model.generate_content(
+                            [prompt, image],
+                            request_options={"api_version": "v1"}
+                        )
                         st.subheader("Kết quả phân tích:")
                         st.write(response.text)
                     except Exception as e:
                         st.error(f"Lỗi khi gọi Gemini API: {e}")
     except Exception as e:
-        st.error(f"Lỗi cấu hình hệ thống: {e}")
+        st.error(f"Lỗi hệ thống: {e}")
 else:
-    st.warning("Vui lòng cấu hình API Key để bắt đầu.")
+    st.warning("Vui lòng cấu hình API Key ở thanh bên trái.")
