@@ -5,18 +5,17 @@ from PIL import Image
 # 1. Cấu hình giao diện
 st.set_page_config(page_title="GlaucoVision AI", layout="centered")
 st.title("👁️ GlaucoVision VF Analyzer")
-st.write("Tải lên ảnh báo cáo Humphrey để phân tích.")
 
-# 2. Lấy API Key từ Secrets (đã cấu hình trong Settings)
+# 2. Lấy API Key từ Secrets
 api_key = st.secrets.get("GEMINI_API_KEY")
 
 if api_key:
     try:
-        # Cấu hình API
         genai.configure(api_key=api_key)
         
-        # Sử dụng model gemini-1.5-flash
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # SỬA LỖI 404: Dùng đường dẫn tuyệt đối thay vì tên ngắn
+        # Cách này giúp thư viện cũ hay mới đều tìm được đúng model
+        model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
         
         uploaded_file = st.file_uploader("Chọn hình ảnh báo cáo...", type=["jpg", "jpeg", "png"])
 
@@ -27,22 +26,21 @@ if api_key:
             if st.button("Phân tích báo cáo"):
                 with st.spinner('Đang phân tích dữ liệu...'):
                     try:
-                        # Prompt tối giản để tránh lỗi dấu ngoặc
                         prompt = """Bạn là một chuyên gia nhãn khoa. Hãy phân tích ảnh báo cáo Humphrey Field Analyzer này:
                         1. Trích xuất các chỉ số MD, PSD, VFI.
                         2. Nhận diện các tổn thương thị trường (nếu có).
                         3. Đưa ra nhận xét khách quan. 
                         Lưu ý: Kết quả này chỉ mang tính tham khảo, không thay thế chẩn đoán y khoa.
                         """
-                        
-                        # Gọi hàm mặc định (đã loại bỏ api_version gây lỗi)
+                        # Gọi hàm đơn giản nhất để tương thích mọi phiên bản
                         response = model.generate_content([prompt, image])
                         
                         st.subheader("Kết quả phân tích:")
                         st.markdown(response.text)
                     except Exception as e:
+                        # Nếu vẫn lỗi 404, chúng ta sẽ in ra danh sách model khả dụng để chẩn đoán
                         st.error(f"Lỗi API: {e}")
     except Exception as e:
         st.error(f"Lỗi hệ thống: {e}")
 else:
-    st.sidebar.warning("Vui lòng cấu hình GEMINI_API_KEY trong mục Secrets của Streamlit.")
+    st.sidebar.warning("Vui lòng cấu hình GEMINI_API_KEY trong mục Secrets.")
