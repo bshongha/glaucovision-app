@@ -13,7 +13,6 @@ api_key = st.secrets.get("GEMINI_API_KEY") or st.sidebar.text_input("Nhập Gemi
 if api_key:
     try:
         genai.configure(api_key=api_key)
-        # Khai báo model đơn giản nhất
         model = genai.GenerativeModel('gemini-1.5-flash')
         
         uploaded_file = st.file_uploader("Chọn hình ảnh báo cáo...", type=["jpg", "jpeg", "png"])
@@ -25,15 +24,14 @@ if api_key:
             if st.button("Phân tích báo cáo"):
                 with st.spinner('Đang phân tích dữ liệu...'):
                     try:
-                        # Gọi nội dung theo cách mặc định của thư viện mới nhất
-                        prompt ="""
-                Bạn là một chuyên gia nhãn khoa. Hãy phân tích ảnh báo cáo Humphrey Field Analyzer này.
+                        prompt = ""Bạn là một chuyên gia nhãn khoa. Hãy phân tích ảnh báo cáo Humphrey Field Analyzer này.
                 1. Trích xuất các chỉ số MD, PSD, VFI.
                 2. Nhận diện các tổn thương thị trường (nếu có).
                 3. Đưa ra nhận xét khách quan. 
                 Lưu ý: Kết quả này chỉ mang tính tham khảo, không thay thế chẩn đoán y khoa.
                 """
-                       response = model.generate_content([prompt, image])
+                        # Dòng này phải thụt lề vào đúng 2 tầng so với 'if st.button'
+                        response = model.generate_content([prompt, image])
                         
                         st.subheader("Kết quả phân tích:")
                         st.markdown(response.text)
