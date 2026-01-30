@@ -25,15 +25,13 @@ if api_key:
                     try:
                         prompt = "Bạn là bác sĩ nhãn khoa. Hãy trích xuất các chỉ số MD, PSD, VFI và tổn thương từ ảnh Humphrey này."
                         # Gọi API với cấu hình đơn giản nhất để tránh lỗi v1beta
-                        response = model.generate_content([prompt, image])
-                        st.subheader("Kết quả phân tích:")
-                        st.write(response.text)
-                    except Exception as e:
-                        if "permission_denied" in str(e).lower():
-                            st.error("Lỗi: API Key của bạn không có quyền sử dụng model này. Hãy kiểm tra lại tại Google AI Studio.")
-                        else:
-                            st.error(f"Lỗi: {e}")
-    except Exception as e:
-        st.error(f"Lỗi hệ thống: {e}")
+                       [prompt, image],
+                request_options={"api_version": "v1"}
+            )
+            
+            st.subheader("Kết quả phân tích:")
+            st.write(response.text)
+        except Exception as e:
+            st.error(f"Lỗi: {e}")
 else:
     st.warning("Vui lòng nhập API Key ở thanh bên trái để bắt đầu.")
