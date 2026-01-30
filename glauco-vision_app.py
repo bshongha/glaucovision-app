@@ -1,6 +1,12 @@
-import streamlit as st
-import google.generativeai as genai
-from PIL import Image
+# Thay thế dòng model cũ bằng 3 dòng này:
+from google.generativeai.types import RequestOptions
+
+# Cấu hình sử dụng phiên bản API v1 thay vì v1beta để tránh lỗi 404
+model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+options = RequestOptions(api_version="v1")
+
+# Và sửa dòng gọi kết quả (khoảng dòng 35-40) thành:
+response = model.generate_content([prompt, image], request_options=options)
 
 # Cấu hình trang web
 st.set_page_config(page_title="GlaucoVision AI", layout="centered")
