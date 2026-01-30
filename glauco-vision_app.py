@@ -8,7 +8,10 @@ st.title("👁️ GlaucoVision VF Analyzer")
 st.write("Tải lên ảnh báo cáo Humphrey để phân tích.")
 
 # Nhập API Key (Khi chạy thực tế sẽ dùng Secrets để bảo mật)
-api_key = st.sidebar.text_input("Nhập Gemini API Key của bạn:", type="password")
+if "GEMINI_API_KEY" in st.secrets:
+    api_key = st.secrets["GEMINI_API_KEY"]
+else:
+    api_key = st.sidebar.text_input("Nhập Gemini API Key của bạn:", type="password")
 
 if api_key:
     genai.configure(api_key=api_key)
