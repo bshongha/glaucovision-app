@@ -24,13 +24,15 @@ if api_key:
             if st.button("Phân tích báo cáo"):
                 with st.spinner('Đang phân tích dữ liệu...'):
                     try:
-                        prompt = ""Bạn là một chuyên gia nhãn khoa. Hãy phân tích ảnh báo cáo Humphrey Field Analyzer này.
-                1. Trích xuất các chỉ số MD, PSD, VFI.
-                2. Nhận diện các tổn thương thị trường (nếu có).
-                3. Đưa ra nhận xét khách quan. 
-                Lưu ý: Kết quả này chỉ mang tính tham khảo, không thay thế chẩn đoán y khoa.
-                """
-                        # Dòng này phải thụt lề vào đúng 2 tầng so với 'if st.button'
+                        # Sửa lỗi dấu ngoặc và căn lề tại đây
+                        prompt = """
+                        Bạn là một chuyên gia nhãn khoa. Hãy phân tích ảnh báo cáo Humphrey Field Analyzer này:
+                        1. Trích xuất các chỉ số MD, PSD, VFI.
+                        2. Nhận diện các tổn thương thị trường (nếu có).
+                        3. Đưa ra nhận xét khách quan. 
+                        Lưu ý: Kết quả này chỉ mang tính tham khảo, không thay thế chẩn đoán y khoa.
+                        """
+                        
                         response = model.generate_content([prompt, image])
                         
                         st.subheader("Kết quả phân tích:")
