@@ -24,8 +24,9 @@ if api_key:
                 with st.spinner('Đang phân tích dữ liệu...'):
                     try:
                         prompt = "Bạn là bác sĩ nhãn khoa. Hãy trích xuất các chỉ số MD, PSD, VFI và tổn thương từ ảnh Humphrey này."
-                        # Gọi API với cấu hình đơn giản nhất để tránh lỗi v1beta
-                       [prompt, image],
+                  # SỬA TẠI ĐÂY: Ép sử dụng v1 thay vì v1beta để tránh lỗi 404
+            response = model.generate_content(
+                [prompt, image],
                 request_options={"api_version": "v1"}
             )
             
