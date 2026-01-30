@@ -13,8 +13,8 @@ api_key = st.secrets.get("GEMINI_API_KEY") or st.sidebar.text_input("Nhập Gemi
 if api_key:
     try:
         genai.configure(api_key=api_key)
-        # Sử dụng model gemini-1.5-flash
-        model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+        # Khai báo model đơn giản nhất
+        model = genai.GenerativeModel('gemini-1.5-flash')
         
         uploaded_file = st.file_uploader("Chọn hình ảnh báo cáo...", type=["jpg", "jpeg", "png"])
 
@@ -24,22 +24,19 @@ if api_key:
             
             if st.button("Phân tích báo cáo"):
                 with st.spinner('Đang phân tích dữ liệu...'):
-                    # KHỐI TRY/EXCEPT PHẢI ĐI CÙNG NHAU
                     try:
-                        prompt = """
+                        # Gọi nội dung theo cách mặc định của thư viện mới nhất
+                        prompt ="""
                 Bạn là một chuyên gia nhãn khoa. Hãy phân tích ảnh báo cáo Humphrey Field Analyzer này.
                 1. Trích xuất các chỉ số MD, PSD, VFI.
                 2. Nhận diện các tổn thương thị trường (nếu có).
                 3. Đưa ra nhận xét khách quan. 
                 Lưu ý: Kết quả này chỉ mang tính tham khảo, không thay thế chẩn đoán y khoa.
                 """
-                        # Ép sử dụng v1 để tránh lỗi 404 như đã thảo luận
-                        response = model.generate_content(
-                            [prompt, image],
-                            request_options={"api_version": "v1"}
-                        )
+                       response = model.generate_content([prompt, image])
+                        
                         st.subheader("Kết quả phân tích:")
-                        st.write(response.text)
+                        st.markdown(response.text)
                     except Exception as e:
                         st.error(f"Lỗi API: {e}")
     except Exception as e:
