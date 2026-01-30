@@ -17,7 +17,7 @@ if api_key:
     try:
         genai.configure(api_key=api_key)
         # Sử dụng model ổn định nhất
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
 
         uploaded_file = st.file_uploader("Chọn hình ảnh báo cáo...", type=["jpg", "jpeg", "png"])
 
