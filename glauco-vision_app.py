@@ -4,7 +4,8 @@ from PIL import Image
 
 # 1. Cấu hình giao diện
 st.set_page_config(page_title="GlaucoVision AI", layout="centered")
-st.title("👁️ AI Visual Field Analyzer - Dr. Le Hong Ha, MD")
+st.title("👁️ AI Visual Field Analyzer
+Dr. Le Hong Ha, MD")
 
 # 2. Lấy API Key từ Secrets
 api_key = st.secrets.get("GEMINI_API_KEY")
