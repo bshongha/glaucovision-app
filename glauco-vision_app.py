@@ -4,7 +4,7 @@ from PIL import Image
 
 # 1. Cấu hình giao diện
 st.set_page_config(page_title="GlaucoVision AI", layout="centered")
-st.title("👁️ GlaucoVision VF Analyzer")
+st.title("👁️ AI Visual Field Analyzer - Dr. Le Hong Ha, MD")
 
 # 2. Lấy API Key từ Secrets
 api_key = st.secrets.get("GEMINI_API_KEY")
@@ -40,7 +40,7 @@ if api_key:
                         
                         st.subheader("Kết quả phân tích:")
                         st.markdown(response.text)
-                        st.markdown("App phân tích thị trường - BSCK2 Lê Hồng Hà")
+                        st.markdown("Visual Field Analyzer - Dr. Le Hong Ha, MD")
                     except Exception as e:
                         st.error(f"Lỗi API: {e}")
     except Exception as e:
